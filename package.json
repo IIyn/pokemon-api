@@ -1,5 +1,5 @@
 {
-  "name": "express-ts-setup",
+  "name": "pokemon-api",
   "version": "1.0.0",
   "main": "src/app.ts",
   "scripts": {
