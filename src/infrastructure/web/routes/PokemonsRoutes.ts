@@ -2,8 +2,8 @@ import express from "express";
 import {
   getPokemonById,
   getAllPokemons,
-} from "@src/infrastructure/web/controllers/PokemonsController";
-import { paramChecker } from "@src/middlewares/paramChecker";
+} from "@/infrastructure/web/controllers/PokemonsController";
+import { paramChecker } from "@/middlewares/paramChecker";
 
 const router = express.Router();
 

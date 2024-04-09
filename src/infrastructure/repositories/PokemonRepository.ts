@@ -1,4 +1,4 @@
-import { Pokemon } from "@src/domain/entities/Pokemon";
+import { Pokemon } from "@/domain/entities/Pokemon";
 import fs from "fs";
 import path from "path";
 

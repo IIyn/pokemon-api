@@ -2,8 +2,8 @@ import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 dotenv.config();
 
-import env from "@src/config/env";
-import router from "@src/infrastructure/web/routes/PokemonsRoutes";
+import env from "@/config/env";
+import router from "@/infrastructure/web/routes/PokemonsRoutes";
 
 const app = express();
 const { PORT, HOST } = env;

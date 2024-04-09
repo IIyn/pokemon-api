@@ -11,8 +11,7 @@
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
     "baseUrl": ".",
     "paths": {
-      "@src": ["src"],
-      "@src/*": ["src/*"],
+      "@/*": ["src/*"],
     },
   },
   "include": ["src/**/*.ts"],                            /* Specify an array of 'glob' patterns that match files to include in the program. */

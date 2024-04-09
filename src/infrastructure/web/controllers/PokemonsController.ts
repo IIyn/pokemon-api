@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { response } from "@src/utils/response";
-import { PokemonService } from "@src/domain/services/PokemonService";
+import { response } from "@/utils/response";
+import { PokemonService } from "@/domain/services/PokemonService";
 
 const pokemonService = new PokemonService();
 

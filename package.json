@@ -8,7 +8,7 @@
     "watch": "tsc --watch"
   },
   "_moduleAliases": {
-    "@src": "src"
+    "@": "src"
   },
   "keywords": [],
   "author": "",

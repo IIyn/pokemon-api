@@ -1,5 +1,5 @@
-import { Pokemon } from "@src/domain/entities/Pokemon";
-import { PokemonRepository } from "@src/infrastructure/repositories/PokemonRepository";
+import { Pokemon } from "@/domain/entities/Pokemon";
+import { PokemonRepository } from "@/infrastructure/repositories/PokemonRepository";
 
 export class PokemonService {
   private pokemonRepository: PokemonRepository;

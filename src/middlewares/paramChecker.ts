@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { response } from "@src/utils/response";
+import { response } from "@/utils/response";
 
 export const paramChecker = (
   param: string,

@@ -1,5 +1,5 @@
 import express from "express";
-import pokemonRoutes from "@src/infrastructure/web/routes/PokemonsRoutes";
+import pokemonRoutes from "@/infrastructure/web/routes/PokemonsRoutes";
 
 const router = express.Router();
 
