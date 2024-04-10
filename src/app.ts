@@ -9,7 +9,7 @@ import swaggerJsDoc from "swagger-jsdoc";
 import { swaggerDefinition } from "./swagger";
 
 const app = express();
-const { PORT, HOST } = env;
+const { PORT, HOST, NODE_ENV } = env;
 
 const options = {
   swaggerDefinition: swaggerDefinition,
@@ -24,6 +24,10 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Hello World");
 });
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server is running on port http://${HOST}:${PORT}`);
+const server = app.listen(PORT, HOST, () => {
+  if (NODE_ENV !== "test") {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
+  }
 });
+
+export { app, server };

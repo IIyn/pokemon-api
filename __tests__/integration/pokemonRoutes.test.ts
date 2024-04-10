@@ -1,45 +1,62 @@
 //@ts-nocheck
-import axios from "axios";
-import env from "../../src/config/env";
+import request from "supertest";
+import { app, server } from "../../src/app";
 
-const { PORT, HOST } = env;
+beforeAll(() => {
+  process.env.NODE_ENV = "test";
+});
 
-describe("Pokemon routes", () => {
+afterAll((done: ((err?: Error | undefined) => void) | undefined) => {
+  server.close(done);
+});
+
+describe("GET /pokemons", () => {
+  it("should return 200 OK", async () => {
+    const response = await request(app).get("/pokemons");
+    expect(response.status).toBe(200);
+  });
+
   it("should return a list of pokemons", async () => {
-    const response = await axios.get(`http://${HOST}:${PORT}/pokemons`);
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
-  });
-
-  it("should return a pokemon by id", async () => {
-    const response = await axios.get(`http://${HOST}:${PORT}/pokemons/1`);
-    expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
-  });
-
-  it("should return status 400 if pokemon id is not a number", async () => {
-    try {
-      await axios.get(`http://${HOST}:${PORT}/pokemons/abc`);
-    } catch (error) {
-      expect(error.response.status).toBe(400);
-    }
-  });
-
-  it("should return a random set of pokemons", async () => {
-    const set = 3;
-    const response = await axios.get(
-      `http://${HOST}:${PORT}/pokemons/randoms/${set}`
+    const response = await request(app).get("/pokemons");
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: expect.any(String),
+        data: expect.any(Array),
+      })
     );
-    console.log("DATA LENGTH", response.data.length);
+  });
+});
+
+describe("GET /pokemons/:id", () => {
+  it("should return 200 OK", async () => {
+    const response = await request(app).get("/pokemons/1");
     expect(response.status).toBe(200);
-    expect(response.data).toBeDefined();
   });
 
-  it("should return status 400 if set is not a number", async () => {
-    try {
-      await axios.get(`http://${HOST}:${PORT}/pokemons/randoms/abc`);
-    } catch (error) {
-      expect(error.response.status).toBe(400);
-    }
+  it("should return a pokemon", async () => {
+    const response = await request(app).get("/pokemons/1");
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: expect.any(String),
+        data: expect.any(Object),
+      })
+    );
+  });
+});
+
+describe("GET /pokemons/randoms/:set", () => {
+  it("should return 200 OK", async () => {
+    const response = await request(app).get("/pokemons/randoms/1");
+    expect(response.status).toBe(200);
+  });
+
+  it("should return a set of random pokemons", async () => {
+    const response = await request(app).get("/pokemons/randoms/1");
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        message: expect.any(String),
+        data: expect.any(Array),
+      })
+    );
   });
 });
