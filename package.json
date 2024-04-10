@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "src/app.ts",
   "scripts": {
-    "test": "jest __tests__ --maxWorkers 2",
+    "test": "jest __tests__ --runInBand",
     "dev": "concurrently \"tsc --watch\" \"tsnd --respawn -r tsconfig-paths/register src/app.ts\"",
     "watch": "tsc --watch",
     "doc": "typedoc",
