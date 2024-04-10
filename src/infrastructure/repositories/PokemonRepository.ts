@@ -21,15 +21,28 @@ export class PokemonRepository {
     this.pokemons = this.loadPokemons();
   }
 
+  /**
+   * Load pokemons from the json file
+   * @returns {Pokemon[]} - The list of pokemons
+   */
   loadPokemons(): Pokemon[] {
     const data = fs.readFileSync(this.filePath, "utf-8");
     return JSON.parse(data);
   }
 
+  /**
+   * Get a pokemon by its id
+   * @param id - The id of the pokemon
+   * @returns Pokemon | undefined - The pokemon with the given id
+   */
   getPokemonById(id: number): Pokemon | undefined {
     return this.pokemons.find((pokemon) => pokemon.id === id);
   }
 
+  /**
+   * Get all pokemons
+   * @returns {Pokemon[]} - All pokemons
+   */
   getAllPokemons(): Pokemon[] {
     return this.pokemons;
   }

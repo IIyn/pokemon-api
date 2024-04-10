@@ -1,3 +1,6 @@
+/**
+ * Interface representing a Pokemon entity based on the data from the Pokemons.json file.
+ */
 export interface Pokemon {
   id: number;
   name: {

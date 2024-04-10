@@ -15,5 +15,9 @@
     },
   },
   "include": ["src/**/*.ts"],                            /* Specify an array of 'glob' patterns that match files to include in the program. */
-  "exclude": ["node_modules"]                            /* Specify an array of 'glob' patterns that match files to exclude from the program. */
+  "exclude": ["node_modules"],                         /* Specify an array of 'glob' patterns that match files to exclude from the program. */
+  "typedocOptions" : {
+    "entryPoints": ["src/**/*.ts"],
+    "out": "docs",
+  }
 }
