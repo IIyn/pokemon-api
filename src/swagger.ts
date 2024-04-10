@@ -192,6 +192,112 @@ export const swaggerDefinition = {
         },
       },
     },
+    "/auth/login": {
+      post: {
+        summary: "Login",
+        tags: ["Auth"],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  username: {
+                    type: "string",
+                  },
+                  password: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "A token.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/auth/logout": {
+      post: {
+        summary: "Logout",
+        tags: ["Auth"],
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/auth/register": {
+      post: {
+        summary: "Register",
+        tags: ["Auth"],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  username: {
+                    type: "string",
+                  },
+                  password: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   tags: [
     {
@@ -209,6 +315,10 @@ export const swaggerDefinition = {
     {
       name: "DELETE endpoints",
       description: "DELETE Endpoints to delete pokemons.",
+    },
+    {
+      name: "Auth",
+      description: "Endpoints to authenticate users.",
     },
   ],
 };
