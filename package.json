@@ -6,7 +6,9 @@
     "test": "jest __tests__ --maxWorkers 2",
     "dev": "concurrently \"tsc --watch\" \"tsnd --respawn -r tsconfig-paths/register src/app.ts\"",
     "watch": "tsc --watch",
-    "doc": "typedoc"
+    "doc": "typedoc",
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
   "_moduleAliases": {
     "@": "src"
