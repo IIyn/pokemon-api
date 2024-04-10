@@ -13,11 +13,12 @@
     "paths": {
       "@/*": ["src/*"],
     },
+    "types": ["node", "jest"],                           /* Specify type package names to include without being referenced in a source file. */
   },
-  "include": ["src/**/*.ts"],                            /* Specify an array of 'glob' patterns that match files to include in the program. */
+  "include": ["src/**/*.ts", "test/**/*.ts"],                            /* Specify an array of 'glob' patterns that match files to include in the program. */
   "exclude": ["node_modules"],                         /* Specify an array of 'glob' patterns that match files to exclude from the program. */
   "typedocOptions" : {
     "entryPoints": ["src/**/*.ts"],
     "out": "docs",
-  }
+  },
 }
