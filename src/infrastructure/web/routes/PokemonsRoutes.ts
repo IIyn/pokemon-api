@@ -5,10 +5,11 @@ import {
   getRandomPokemons,
 } from "@/infrastructure/web/controllers/PokemonsController";
 import { idChecker, setChecker } from "@/middlewares/paramChecker";
+import { verifyToken } from "@/middlewares/validateToken";
 
 const router = express.Router();
 
-router.get("/", getAllPokemons);
+router.get("/", verifyToken, getAllPokemons);
 
 router.get("/:id", idChecker, getPokemonById);
 

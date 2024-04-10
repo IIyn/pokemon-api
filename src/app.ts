@@ -7,8 +7,10 @@ import env from "@/config/env";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import { swaggerDefinition } from "./swagger";
+import cookieParser from "cookie-parser";
 
 const app = express();
+app.use(cookieParser());
 const { PORT, HOST, NODE_ENV } = env;
 
 const options = {
