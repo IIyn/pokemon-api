@@ -2,7 +2,52 @@
   {
     "id": "71d60548-8736-452b-896f-b6aa0d13e21d",
     "name": "Sacha",
-    "pokemonIds": ["118", "5", "65", "12"],
+    "pokemonIds": [
+      "118",
+      "5",
+      "65",
+      "12"
+    ],
+    "userId": "79830992-52a7-48e5-b64d-8315a51cfc82"
+  },
+  {
+    "id": "fcdcc1f2-8f1f-499e-82a7-a9d5e39b3c8f",
+    "name": "Pierre",
+    "pokemonIds": [
+      "12",
+      "87",
+      "3"
+    ],
+    "userId": "79830992-52a7-48e5-b64d-8315a51cfc82"
+  },
+  {
+    "id": "54010b2a-0944-47a0-9060-a5ff767ac1e5",
+    "name": "Flora",
+    "pokemonIds": [
+      "12",
+      "87",
+      "3"
+    ],
+    "userId": "79830992-52a7-48e5-b64d-8315a51cfc82"
+  },
+  {
+    "id": "78ce9916-5d80-4dde-8df5-ba7292822725",
+    "name": "Regis",
+    "pokemonIds": [
+      "12",
+      "87",
+      "3"
+    ],
+    "userId": "79830992-52a7-48e5-b64d-8315a51cfc82"
+  },
+  {
+    "id": "bcf5e8ca-13af-4621-a4a8-f703935aca39",
+    "name": "Ken",
+    "pokemonIds": [
+      "12",
+      "87",
+      "3"
+    ],
     "userId": "79830992-52a7-48e5-b64d-8315a51cfc82"
   }
 ]
