@@ -11,8 +11,8 @@ const router = express.Router();
 
 router.get("/", verifyToken, getAllPokemons);
 
-router.get("/:id", idChecker, getPokemonById);
+router.get("/:id", verifyToken, idChecker, getPokemonById);
 
-router.get("/randoms/:set", setChecker, getRandomPokemons);
+router.get("/randoms/:set", verifyToken, setChecker, getRandomPokemons);
 
 export default router;

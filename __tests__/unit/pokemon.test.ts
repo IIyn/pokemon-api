@@ -23,6 +23,28 @@ describe("Pokemon", () => {
       "Sp. Defense": 65,
       Speed: 45,
     },
+    species: "Seed Pokémon",
+    description:
+      "Bulbasaur can be seen napping in bright sunlight. There is a seed on its back. By soaking up the sun’s rays, the seed grows progressively larger.",
+    evolution: { next: [["2", "Level 16"]] },
+    profile: {
+      height: "0.7 m",
+      weight: "6.9 kg",
+      egg: ["Monster", "Grass"],
+      ability: [
+        ["Overgrow", "false"],
+        ["Chlorophyll", "true"],
+      ],
+      gender: "87.5:12.5",
+    },
+    image: {
+      sprite:
+        "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/sprites/001.png",
+      thumbnail:
+        "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/thumbnails/001.png",
+      hires:
+        "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/001.png",
+    },
   };
 
   it("should return a list of pokemons", async () => {

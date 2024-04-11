@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 app.use(cookieParser());
+app.use(express.json());
 const { PORT, HOST, NODE_ENV } = env;
 
 const options = {

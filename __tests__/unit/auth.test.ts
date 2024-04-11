@@ -6,10 +6,8 @@ import { UserRepository } from "../../src/infrastructure/repositories/UserReposi
 const authService = new AuthService();
 const userRepository = new UserRepository();
 const user: User = {
-  id: "test",
   username: "test",
   password: "test",
-  refreshToken: "test",
 };
 
 beforeAll(() => {
@@ -35,5 +33,17 @@ describe("Auth", () => {
     const userAssert = authService.getUserByUsername("test");
     expect(userAssert).toBeDefined();
     expect(userAssert).toEqual(user);
+  });
+
+  it("should update a user", () => {
+    const userAssert = authService.getUserByUsername("test");
+    userAssert.username = "test2";
+    userAssert.password =
+      "$2b$10$8bi4O6lkwrduYTqeKtu74unScMFvzDz1RFwogSYySk2ShkWtFSosi"; // -> "password"
+    authService.updateUser(userAssert);
+    const userAssert2 = authService.getUserByUsername("test2");
+    expect(userAssert2).toBeDefined();
+    expect(userAssert2).toEqual(userAssert);
+    expect(authService.verifyUser("test2", "password")).toBeTruthy();
   });
 });

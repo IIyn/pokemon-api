@@ -43,7 +43,7 @@ export class PokemonRepository {
    * Get all pokemons
    * @returns {Pokemon[]} - All pokemons
    */
-  getAllPokemons(): Pokemon[] {
-    return this.pokemons;
+  getAllPokemons(limit: number = 30): Pokemon[] {
+    return this.pokemons.slice(0, limit);
   }
 }

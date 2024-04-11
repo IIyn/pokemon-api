@@ -18,4 +18,22 @@ export interface Pokemon {
     SpDefense: number;
     Speed: number;
   };
+  species: string;
+  description: string;
+  evolution: {
+    next?: string;
+    prev?: string;
+  };
+  profile: {
+    height: string;
+    weight: string;
+    egg: string[];
+    ability: Array<string[]>;
+    gender: string;
+  };
+  image: {
+    sprite: string;
+    thumbnail: string;
+    hires: string;
+  };
 }

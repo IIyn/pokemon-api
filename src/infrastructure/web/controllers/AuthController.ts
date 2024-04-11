@@ -1,46 +1,45 @@
 import { Request, Response, NextFunction } from "express";
 import { response } from "@/utils/response";
 import { AuthService } from "@/domain/services/AuthService";
-import jwt from "jsonwebtoken";
-import env from "@/config/env";
-import { User } from "@/domain/entities/User";
-import { randomUUID } from "crypto";
-
-const { JWT_SECRET, REFRESH_SECRET } = env;
+import bcrypt from "bcrypt";
 
 const authService = new AuthService();
 
-const generateTokens = (username: string) => {
-  const accessToken = jwt.sign({ username }, JWT_SECRET, {
-    expiresIn: "2mins",
-  });
-
-  const refreshToken = jwt.sign({ username }, REFRESH_SECRET, {
-    expiresIn: "3h",
-  });
-
-  return { accessToken, refreshToken };
+/**
+ * Hash the password
+ * @param password
+ */
+const hashPassword = async (password: string) => {
+  return await bcrypt.hash(password, 10);
 };
 
-export const register = (req: Request, res: Response) => {
-  console.log("register");
+/**
+ * Register a user. The password is hashed before being stored
+ * @param username
+ * @param password
+ */
+const registerUser = async (username: string, password: string) => {
+  authService.createUser({
+    username,
+    password: await hashPassword(password),
+  });
+};
+
+/**
+ * Autehnticate the user, if the user does not exist, create it. This controller works for both registering and logging in
+ * @param req
+ * @param res
+ */
+export const authenticate = (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    const { accessToken, refreshToken } = generateTokens(username);
-    const user: User = {
-      id: randomUUID(),
-      username,
-      password,
-      refreshToken,
-    };
+    if (!authService.verifyUser(username, password)) {
+      registerUser(username, password);
+    }
 
-    authService.createUser(user);
-
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "none",
-    });
+    const userCreated = authService.getUserByUsername(username);
+    const accessToken = authService.issueAccessToken(userCreated?.id!);
+    authService.issueRefreshToken(userCreated?.id!);
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: false,
@@ -59,43 +58,13 @@ export const register = (req: Request, res: Response) => {
   }
 };
 
-export const login = (req: Request, res: Response) => {
-  try {
-    const { username, password } = req.body;
-    if (authService.verifyUser(username, password)) {
-      const { accessToken, refreshToken } = generateTokens(username);
-
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "none",
-      });
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: false,
-        sameSite: "none",
-      });
-      response(res, {
-        statusCode: 200,
-        message: "OK",
-      });
-    } else {
-      response(res, {
-        statusCode: 401,
-        message: "Unauthorized",
-      });
-    }
-  } catch (error) {
-    response(res, {
-      statusCode: 500,
-      message: "Internal Server Error",
-    });
-  }
-};
-
-export const logout = (req: Request, res: Response) => {
+/**
+ * Logout the user
+ * @param req
+ * @param res
+ */
+export const logout = (res: Response) => {
   res.clearCookie("accessToken");
-  res.clearCookie("refreshToken");
   response(res, {
     statusCode: 200,
     message: "OK",

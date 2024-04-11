@@ -1,12 +1,7 @@
 [
   {
-    "id": "aba25dbc-528d-493a-9ecc-fdb366c36402",
     "username": "admin",
-    "password": "password",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNzEyNzY4NDEyLCJleHAiOjE3MTI3NzkyMTJ9.vE2njGmtxrff5vhJyJn2TwZYnl950n6I1wRevytH8gQ"
-  },
-  {
-    "id": "9cf305b0-e70d-4b3c-8624-9fc77412e97b",
-    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTI3NjkyMTIsImV4cCI6MTcxMjc4MDAxMn0.a1G0YoEQ00TsnTHIzu2FmfAMPVhvyCBYIuS_PK8sEyw"
+    "password": "$2b$10$8bi4O6lkwrduYTqeKtu74unScMFvzDz1RFwogSYySk2ShkWtFSosi",
+    "id": "79830992-52a7-48e5-b64d-8315a51cfc82"
   }
 ]

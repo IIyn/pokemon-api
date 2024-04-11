@@ -1,0 +1,19 @@
+[
+  {
+    "id": "1",
+    "name": "Trainer000",
+    "pokemonIds": ["67"],
+    "userId": "1"
+  },
+  {
+    "id": "71d60548-8736-452b-896f-b6aa0d13e21d",
+    "name": "Sacha",
+    "pokemonIds": [
+      "118",
+      "5",
+      "65",
+      "12"
+    ],
+    "userId": "79830992-52a7-48e5-b64d-8315a51cfc82"
+  }
+]

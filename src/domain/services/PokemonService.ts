@@ -25,8 +25,12 @@ export class PokemonService {
    * Get all pokemons
    * @returns Pokemon[] - All pokemons
    */
-  getAllPokemons(): Pokemon[] {
-    return this.pokemonRepository.getAllPokemons();
+  getAllPokemons(limit: number | undefined): Pokemon[] {
+    if (limit) {
+      return this.pokemonRepository.getAllPokemons(limit);
+    } else {
+      return this.pokemonRepository.getAllPokemons();
+    }
   }
 
   /**
