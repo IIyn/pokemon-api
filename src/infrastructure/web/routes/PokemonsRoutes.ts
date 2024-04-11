@@ -9,10 +9,12 @@ import { verifyToken } from "@/middlewares/validateToken";
 
 const router = express.Router();
 
-router.get("/", verifyToken, getAllPokemons);
+router.use(verifyToken);
 
-router.get("/:id", verifyToken, idChecker, getPokemonById);
+router.get("/", getAllPokemons);
 
-router.get("/randoms/:set", verifyToken, setChecker, getRandomPokemons);
+router.get("/:id", idChecker, getPokemonById);
+
+router.get("/randoms/:set", setChecker, getRandomPokemons);
 
 export default router;

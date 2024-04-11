@@ -16,10 +16,10 @@ export const swaggerDefinition = {
   ],
   components: {
     securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearer: "JWT",
+      cookieAuth: {
+        type: "apiKey",
+        in: "cookie",
+        name: "accessToken",
       },
     },
   },
@@ -125,6 +125,7 @@ export const swaggerDefinition = {
   paths: {
     "/pokemons": {
       get: {
+        security: [{ cookieAuth: [] }],
         summary: "Get all pokemons",
         tags: ["Pokemons"],
         responses: {
@@ -155,6 +156,7 @@ export const swaggerDefinition = {
     },
     "/pokemons/{id}": {
       get: {
+        security: [{ cookieAuth: [] }],
         summary: "Get a pokemon by ID",
         tags: ["Pokemons"],
         parameters: [
@@ -194,6 +196,7 @@ export const swaggerDefinition = {
     },
     "/pokemons/randoms/{set}": {
       get: {
+        security: [{ cookieAuth: [] }],
         summary: "Get a set of random pokemons",
         tags: ["Pokemons"],
         parameters: [
@@ -233,6 +236,55 @@ export const swaggerDefinition = {
         },
       },
     },
+    "/auth/register": {
+      post: {
+        summary: "Register",
+        headers: {
+          "Set-Cookie": {
+            description: "The access token.",
+            schema: {
+              type: "string",
+            },
+          },
+        },
+        tags: ["Auth"],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  username: {
+                    type: "string",
+                  },
+                  password: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     "/auth/login": {
       post: {
         summary: "Login",
@@ -257,6 +309,14 @@ export const swaggerDefinition = {
         responses: {
           "200": {
             description: "A token.",
+            headers: {
+              "Set-Cookie": {
+                description: "The access token.",
+                schema: {
+                  type: "string",
+                },
+              },
+            },
             content: {
               "application/json": {
                 schema: {
@@ -298,49 +358,9 @@ export const swaggerDefinition = {
         },
       },
     },
-    "/auth/register": {
-      post: {
-        summary: "Register",
-        tags: ["Auth"],
-        requestBody: {
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  username: {
-                    type: "string",
-                  },
-                  password: {
-                    type: "string",
-                  },
-                },
-              },
-            },
-          },
-        },
-        responses: {
-          "200": {
-            description: "A message.",
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    message: {
-                      type: "string",
-                      example: "OK",
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
     "/trainers/{id}": {
       get: {
+        security: [{ cookieAuth: [] }],
         summary: "Get a trainer by ID",
         tags: ["Trainers"],
         parameters: [
@@ -380,6 +400,7 @@ export const swaggerDefinition = {
     },
     "/trainers/user/{id}": {
       get: {
+        security: [{ cookieAuth: [] }],
         summary: "Get a trainer by user ID",
         tags: ["Trainers"],
         parameters: [
@@ -419,6 +440,7 @@ export const swaggerDefinition = {
     },
     "/trainers/me": {
       get: {
+        security: [{ cookieAuth: [] }],
         summary: "Get self trainers",
         tags: ["Trainers"],
         responses: {
@@ -449,6 +471,7 @@ export const swaggerDefinition = {
     },
     "/trainers": {
       post: {
+        security: [{ cookieAuth: [] }],
         summary: "Add a trainer",
         tags: ["Trainers"],
         requestBody: {
@@ -482,6 +505,7 @@ export const swaggerDefinition = {
     },
     "/trainers/pokemon": {
       post: {
+        security: [{ cookieAuth: [] }],
         summary: "Add a pokemon to a trainer",
         tags: ["Trainers"],
         requestBody: {
@@ -521,6 +545,7 @@ export const swaggerDefinition = {
         },
       },
       delete: {
+        security: [{ cookieAuth: [] }],
         summary: "Remove a pokemon from a trainer",
         tags: ["Trainers"],
         requestBody: {
@@ -562,6 +587,7 @@ export const swaggerDefinition = {
     },
     "/trainers/team": {
       post: {
+        security: [{ cookieAuth: [] }],
         summary: "Add a team to a trainer",
         tags: ["Trainers"],
         requestBody: {
@@ -604,12 +630,12 @@ export const swaggerDefinition = {
   },
   tags: [
     {
-      name: "Pokemons",
-      description: "GET Endpoints to get pokemons.",
-    },
-    {
       name: "Auth",
       description: "Endpoints to authenticate users.",
+    },
+    {
+      name: "Pokemons",
+      description: "GET Endpoints to get pokemons.",
     },
     {
       name: "Trainers",
