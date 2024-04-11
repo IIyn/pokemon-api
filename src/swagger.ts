@@ -33,49 +33,90 @@ export const swaggerDefinition = {
         },
         name: {
           type: "object",
-          description: "The pokemon's names.",
           properties: {
-            english: {
-              type: "string",
-            },
-            japanese: {
-              type: "string",
-            },
-            chinese: {
-              type: "string",
-            },
-            french: {
-              type: "string",
-            },
+            english: { type: "string" },
+            japanese: { type: "string" },
+            chinese: { type: "string" },
+            french: { type: "string" },
           },
         },
         type: {
           type: "array",
-          items: {
-            type: "string",
-          },
+          items: { type: "string" },
         },
         base: {
           type: "object",
           properties: {
-            HP: {
-              type: "integer",
+            HP: { type: "integer" },
+            Attack: { type: "integer" },
+            Defense: { type: "integer" },
+            "Sp. Attack": { type: "integer" },
+            "Sp. Defense": { type: "integer" },
+            Speed: { type: "integer" },
+          },
+        },
+        species: { type: "string" },
+        description: { type: "string" },
+        evolution: {
+          type: "object",
+          properties: {
+            next: {
+              type: "array",
+              items: {
+                type: "array",
+                items: { type: "string" },
+              },
             },
-            Attack: {
-              type: "integer",
+          },
+        },
+        profile: {
+          type: "object",
+          properties: {
+            height: { type: "string" },
+            weight: { type: "string" },
+            egg: {
+              type: "array",
+              items: { type: "string" },
             },
-            Defense: {
-              type: "integer",
+            ability: {
+              type: "array",
+              items: {
+                type: "array",
+                items: { type: "string" },
+              },
             },
-            "Sp. Attack": {
-              type: "integer",
-            },
-            "Sp. Defense": {
-              type: "integer",
-            },
-            Speed: {
-              type: "integer",
-            },
+            gender: { type: "string" },
+          },
+        },
+        image: {
+          type: "object",
+          properties: {
+            sprite: { type: "string" },
+            thumbnail: { type: "string" },
+            hires: { type: "string" },
+          },
+        },
+      },
+    },
+    Trainer: {
+      type: "object",
+      properties: {
+        id: {
+          type: "string",
+          description: "The trainer ID.",
+        },
+        name: {
+          type: "string",
+          description: "The trainer's name.",
+        },
+        userId: {
+          type: "string",
+          description: "The user ID.",
+        },
+        pokemonIds: {
+          type: "array",
+          items: {
+            type: "string",
           },
         },
       },
@@ -85,7 +126,7 @@ export const swaggerDefinition = {
     "/pokemons": {
       get: {
         summary: "Get all pokemons",
-        tags: ["GET endpoints"],
+        tags: ["Pokemons"],
         responses: {
           "200": {
             description: "A list of pokemons.",
@@ -115,7 +156,7 @@ export const swaggerDefinition = {
     "/pokemons/{id}": {
       get: {
         summary: "Get a pokemon by ID",
-        tags: ["GET endpoints"],
+        tags: ["Pokemons"],
         parameters: [
           {
             name: "id",
@@ -154,7 +195,7 @@ export const swaggerDefinition = {
     "/pokemons/randoms/{set}": {
       get: {
         summary: "Get a set of random pokemons",
-        tags: ["GET endpoints"],
+        tags: ["Pokemons"],
         parameters: [
           {
             name: "set",
@@ -298,27 +339,281 @@ export const swaggerDefinition = {
         },
       },
     },
+    "/trainers/{id}": {
+      get: {
+        summary: "Get a trainer by ID",
+        tags: ["Trainers"],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            description: "The trainer ID.",
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "A trainer.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                    data: {
+                      type: "object",
+                      $ref: "#/definitions/Trainer",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/trainers/user/{id}": {
+      get: {
+        summary: "Get a trainer by user ID",
+        tags: ["Trainers"],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            description: "The user ID.",
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "A trainer.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                    data: {
+                      type: "object",
+                      $ref: "#/definitions/Trainer",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/trainers/me": {
+      get: {
+        summary: "Get self trainers",
+        tags: ["Trainers"],
+        responses: {
+          "200": {
+            description: "A list of trainers.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                    data: {
+                      type: "array",
+                      items: {
+                        $ref: "#/definitions/Trainer",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/trainers": {
+      post: {
+        summary: "Add a trainer",
+        tags: ["Trainers"],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/definitions/Trainer",
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/trainers/pokemon": {
+      post: {
+        summary: "Add a pokemon to a trainer",
+        tags: ["Trainers"],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  trainerId: {
+                    type: "string",
+                  },
+                  pokemonId: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        summary: "Remove a pokemon from a trainer",
+        tags: ["Trainers"],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  trainerId: {
+                    type: "string",
+                  },
+                  pokemonId: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/trainers/team": {
+      post: {
+        summary: "Add a team to a trainer",
+        tags: ["Trainers"],
+        requestBody: {
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  trainerId: {
+                    type: "string",
+                  },
+                  teamId: {
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   tags: [
     {
-      name: "GET endpoints",
+      name: "Pokemons",
       description: "GET Endpoints to get pokemons.",
-    },
-    {
-      name: "POST endpoints",
-      description: "POST Endpoints to create pokemons.",
-    },
-    {
-      name: "PUT endpoints",
-      description: "PUT Endpoints to update pokemons.",
-    },
-    {
-      name: "DELETE endpoints",
-      description: "DELETE Endpoints to delete pokemons.",
     },
     {
       name: "Auth",
       description: "Endpoints to authenticate users.",
+    },
+    {
+      name: "Trainers",
+      description: "Endpoints to manage trainers.",
     },
   ],
 };
