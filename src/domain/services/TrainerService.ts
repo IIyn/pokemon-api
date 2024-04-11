@@ -43,7 +43,10 @@ export class TrainerService {
    * @param id - The id of the trainer
    */
   deleteTrainer(id: string): void {
-    this.trainerRepository.deleteTrainer(id);
+    const trainer = this.trainerRepository.getTrainerById(id);
+    if (trainer) {
+      this.trainerRepository.deleteTrainer(trainer.id);
+    }
     this.trainerRepository.saveTrainers();
   }
 
