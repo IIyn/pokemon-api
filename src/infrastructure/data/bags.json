@@ -2,7 +2,19 @@
   {
     "id": "1",
     "name": "Bag000",
-    "itemIds": ["581"],
+    "itemIds": [
+      "581"
+    ],
     "userId": "1"
+  },
+  {
+    "id": "798a4ed4-d6ad-4534-a7d4-04af7ceb5b90",
+    "name": "Bag001",
+    "itemIds": [
+      "581",
+      "67",
+      "999"
+    ],
+    "trainerId": "fcdcc1f2-8f1f-499e-82a7-a9d5e39b3c8f"
   }
 ]
