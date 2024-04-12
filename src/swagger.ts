@@ -627,6 +627,184 @@ export const swaggerDefinition = {
         },
       },
     },
+    "/bag/{id}": {
+      get: {
+        security: [{ cookieAuth: [] }],
+        summary: "Get a bag by ID",
+        tags: ["Bags"],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            description: "The bag ID.",
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "A bag.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                    data: {
+                      type: "object",
+                      $ref: "#/definitions/Bag",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/bag/trainer/{id}": {
+      get: {
+        security: [{ cookieAuth: [] }],
+        summary: "Get a bag by trainer ID",
+        tags: ["Bags"],
+        parameters: [
+          {
+            name: "id",
+            in: "path",
+            required: true,
+            description: "The trainer ID.",
+            schema: {
+              type: "string",
+            },
+          },
+        ],
+        responses: {
+          "200": {
+            description: "A bag.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                    data: {
+                      type: "object",
+                      $ref: "#/definitions/Bag",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/bag": {
+      post: {
+        security: [{ cookieAuth: [] }],
+        summary: "Add a bag",
+        tags: ["Bags"],
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/bag/item": {
+      post: {
+        security: [{ cookieAuth: [] }],
+        summary: "Add an item to a bag",
+        tags: ["Bags"],
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      delete: {
+        security: [{ cookieAuth: [] }],
+        summary: "Remove an item from a bag",
+        tags: ["Bags"],
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "/bag/items": {
+      post: {
+        security: [{ cookieAuth: [] }],
+        summary: "Add items to a bag",
+        tags: ["Bags"],
+        responses: {
+          "200": {
+            description: "A message.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "OK",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   tags: [
     {
@@ -641,5 +819,9 @@ export const swaggerDefinition = {
       name: "Trainers",
       description: "Endpoints to manage trainers.",
     },
+    {
+      name: "Bags",
+      description: "Endpoints to manage bags.",
+    }
   ],
 };

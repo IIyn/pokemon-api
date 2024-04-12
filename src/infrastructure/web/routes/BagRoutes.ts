@@ -19,9 +19,9 @@ router.get("/trainer/:id", getBagByTrainerId);
 router.get("/me", getSelfBags);
 
 router.post("/", addBag);
-router.post("/pokemon", addItemToBag);
+router.post("/item", addItemToBag);
 router.post("/items", addItemsToBag);
 
-router.delete("/pokemon", removeItemFromBag);
+router.delete("/item", removeItemFromBag);
 
 export default router;
