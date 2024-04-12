@@ -3,10 +3,6 @@ import env from "../../src/config/env";
 import "jest";
 
 describe("env variables", () => {
-  it("should be test", () => {
-    expect(1 + 1).toBe(2);
-  });
-
   it("should have a PORT", () => {
     expect(env.PORT).toBeDefined();
   });

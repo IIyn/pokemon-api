@@ -22,7 +22,7 @@ export class AuthService {
 
   /**
    * Get user by id
-   * @param id - the id of the user
+   * @param username - the id of the user
    * @returns the user
    */
   getUserByUsername(username: string): User | undefined {
