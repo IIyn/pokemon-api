@@ -1,6 +1,6 @@
 {
-  "id": "09c87b83-14c9-497c-9622-0de0086e291e",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "a686975a-58fc-4e66-9b65-446d21b4436e",
+  "prevId": "c52baf80-d7b9-4852-a565-504240fe2496",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -181,7 +181,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "multilingual_names_item_id_item_uuid_fk": {
@@ -298,7 +298,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "pokemon_evolutions_previous_pokemon_id_fk": {
@@ -311,7 +311,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "pokemon_evolutions_next_pokemon_id_fk": {
@@ -324,7 +324,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -379,7 +379,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -434,7 +434,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -501,7 +501,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -537,7 +537,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "pokemon_types_type_id_types_id_fk": {
@@ -550,7 +550,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },

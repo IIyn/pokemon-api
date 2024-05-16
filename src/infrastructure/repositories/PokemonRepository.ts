@@ -1,4 +1,13 @@
-import { Pokemon, NewPokemon, PokemonColumns } from "@/domain/entities/Pokemon";
+import {
+  Pokemon,
+  NewPokemon,
+  NewPokemonStats,
+  TypeEnum,
+  NewPokemonEvolutions,
+  NewPokemonProfile,
+  NewPokemonImages,
+  NewType,
+} from "@/domain/entities/Pokemon";
 import { db } from "@/infrastructure/data";
 import { eq } from "drizzle-orm";
 import {
@@ -9,7 +18,13 @@ import {
   pokemonStats,
   pokemonTypes,
   type,
+  multilingualNames,
 } from "@/infrastructure/data/schema";
+import {
+  MultilingualNames,
+  NewMultilingualNames,
+} from "@/domain/entities/MultilingualNames";
+import { MultilingualNamesRepository } from "./MultilingualNamesRepository";
 
 /**
  * Handling pokemons
@@ -17,6 +32,12 @@ import {
  * @public
  */
 export class PokemonRepository {
+  private multilingualNamesRepository: MultilingualNamesRepository;
+
+  constructor() {
+    this.multilingualNamesRepository = new MultilingualNamesRepository();
+  }
+
   /**
    * Get a pokemon by its id
    * @param id - The id of the pokemon
@@ -71,7 +92,7 @@ export class PokemonRepository {
         .leftJoin(pokemonImages, eq(pokemon.uuid, pokemonImages.pokemonId))
         .leftJoin(
           pokemonEvolutions,
-          eq(pokemon.uuid, pokemonEvolutions.previous)
+          eq(pokemon.uuid, pokemonEvolutions.pokemonId)
         )
         .leftJoin(pokemonTypes, eq(pokemon.uuid, pokemonTypes.pokemonId))
         .where(eq(pokemon.id, id))
@@ -135,7 +156,7 @@ export class PokemonRepository {
         .leftJoin(pokemonImages, eq(pokemon.uuid, pokemonImages.pokemonId))
         .leftJoin(
           pokemonEvolutions,
-          eq(pokemon.uuid, pokemonEvolutions.previous)
+          eq(pokemon.uuid, pokemonEvolutions.pokemonId)
         )
         .leftJoin(pokemonTypes, eq(pokemon.uuid, pokemonTypes.pokemonId))
         .limit(limit)
@@ -164,6 +185,132 @@ export class PokemonRepository {
     } catch (err) {
       console.error(err);
       throw new Error("Impossible de créer le pokémon");
+    }
+  }
+
+  createPokemonNames(pokemonId: string, names: NewMultilingualNames[]) {
+    for (const name of names) {
+      this.multilingualNamesRepository.createMultilingualName({
+        ...name,
+        pokemonId: pokemonId,
+      });
+    }
+  }
+
+  async getType(typeToGet: TypeEnum) {
+    try {
+      return db
+        .select({
+          id: type.id,
+          type: type.type,
+        })
+        .from(type)
+        .where(eq(type.type, typeToGet))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer le type");
+    }
+  }
+
+  async createType(typeToInsert: NewType) {
+    try {
+      return db
+        .insert(type)
+        .values(typeToInsert)
+        .returning({
+          id: type.id,
+        })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de créer le type");
+    }
+  }
+
+  async createPokemonTypes(pokemonId: string, types: string[]) {
+    for (const typeToInsert of types) {
+      const enumedType = TypeEnum[typeToInsert as keyof typeof TypeEnum];
+
+      let typeExists = await this.getType(enumedType);
+      db.insert(pokemonTypes)
+        .values({
+          pokemonId: pokemonId,
+          typeId: typeExists[0].id,
+        })
+        .execute();
+    }
+  }
+
+  createPokemonStats(stats: NewPokemonStats) {
+    try {
+      return db
+        .insert(pokemonStats)
+        .values({
+          ...stats,
+          pokemonId: stats.pokemonId,
+        })
+        .returning({
+          id: pokemonStats.id,
+        })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de créer les statistiques du pokémon");
+    }
+  }
+
+  createPokemonEvolutions(evolutions: NewPokemonEvolutions) {
+    try {
+      return db
+        .insert(pokemonEvolutions)
+        .values({
+          ...evolutions,
+          pokemonId: evolutions.pokemonId,
+        })
+        .returning({
+          id: pokemonEvolutions.id,
+        })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de créer les évolutions du pokémon");
+    }
+  }
+
+  createPokemonProfile(profile: NewPokemonProfile) {
+    try {
+      return db
+        .insert(pokemonProfile)
+        .values({
+          ...profile,
+          pokemonId: profile.pokemonId,
+        })
+        .returning({
+          id: pokemonProfile.id,
+        })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de créer le profil du pokémon");
+    }
+  }
+
+  createPokemonImages(images: NewPokemonImages) {
+    try {
+      return db
+        .insert(pokemonImages)
+        .values({
+          ...images,
+          pokemonId: images.pokemonId,
+        })
+        .returning({
+          id: pokemonImages.id,
+        })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de créer les images du pokémon");
     }
   }
 }

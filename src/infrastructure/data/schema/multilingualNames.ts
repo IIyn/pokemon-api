@@ -15,6 +15,8 @@ export const multilingualNames = pgTable("multilingual_names", {
   language: languagesEnum("language").notNull(),
   // language: varchar("language", { length: 255 }).notNull(),
 
-  pokemonId: uuid("pokemon_id").references(() => pokemon.uuid),
+  pokemonId: uuid("pokemon_id").references(() => pokemon.uuid, {
+    onDelete: "cascade",
+  }),
   itemId: uuid("item_id").references(() => item.uuid),
 });

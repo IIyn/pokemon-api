@@ -1,7 +1,6 @@
 import {
   pgTable,
   varchar,
-  jsonb,
   uuid,
   integer,
   pgEnum,
@@ -12,7 +11,7 @@ import { trainerPokemon } from "./trainer";
 
 export const pokemon = pgTable("pokemon", {
   uuid: uuid("uuid").defaultRandom().primaryKey(),
-  id: integer("id").notNull(),
+  id: integer("id").notNull().unique(),
   species: varchar("species", { length: 255 }).notNull(),
   description: varchar("description", { length: 1000 }).notNull(),
 });
@@ -26,16 +25,16 @@ export const pokemonStats = pgTable("pokemon_stats", {
   specialDefense: integer("special_defense").notNull(),
   pokemonId: uuid("pokemon_id")
     .notNull()
-    .references(() => pokemon.uuid),
+    .references(() => pokemon.uuid, { onDelete: "cascade" }),
 });
 
 export const pokemonProfile = pgTable("pokemon_profile", {
   id: uuid("id").defaultRandom().primaryKey(),
   pokemonId: uuid("pokemon_id")
     .notNull()
-    .references(() => pokemon.uuid),
-  height: integer("height").notNull(),
-  weight: integer("weight").notNull(),
+    .references(() => pokemon.uuid, { onDelete: "cascade" }),
+  height: varchar("height", { length: 255 }).notNull(),
+  weight: varchar("weight", { length: 255 }).notNull(),
   gender: varchar("gender", { length: 255 }).notNull(),
 });
 
@@ -43,7 +42,7 @@ export const pokemonImages = pgTable("pokemon_images", {
   id: uuid("id").defaultRandom().primaryKey(),
   pokemonId: uuid("pokemon_id")
     .notNull()
-    .references(() => pokemon.uuid),
+    .references(() => pokemon.uuid, { onDelete: "cascade" }),
   sprite: varchar("sprite", { length: 255 }).notNull(),
   thumbnail: varchar("thumbnail", { length: 255 }).notNull(),
   hires: varchar("hires", { length: 255 }).notNull(),
@@ -51,10 +50,15 @@ export const pokemonImages = pgTable("pokemon_images", {
 
 export const pokemonEvolutions = pgTable("pokemon_evolutions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  previous: uuid("previous").references(() => pokemon.uuid),
-  next: uuid("next").references(() => pokemon.uuid),
-  prevLevel: integer("prev_level"),
-  nextLevel: integer("next_level"),
+  pokemonId: uuid("pokemon_id")
+    .references(() => pokemon.uuid, { onDelete: "cascade" })
+    .notNull(),
+  previous: integer("previous").references(() => pokemon.id, {
+    onDelete: "cascade",
+  }),
+  next: integer("next").references(() => pokemon.id, { onDelete: "cascade" }),
+  prevLevel: varchar("prev_level", { length: 255 }),
+  nextLevel: varchar("next_level", { length: 255 }),
 });
 
 /* 
@@ -66,30 +70,30 @@ export const pokemonEvolutions = pgTable("pokemon_evolutions", {
    ╚═╝      ╚═╝   ╚═╝     ╚══════╝╚══════╝
 */
 
-export const typeEnum = pgEnum("type_enum", [
-  "Grass",
-  "Poison",
-  "Fire",
-  "Flying",
-  "Water",
-  "Bug",
-  "Normal",
-  "Electric",
-  "Ground",
-  "Fairy",
-  "Fighting",
-  "Psychic",
-  "Rock",
-  "Steel",
-  "Ice",
-  "Ghost",
-  "Dragon",
-  "Dark",
-]);
+// export const typeEnum = pgEnum("type_enum", [
+//   "Grass",
+//   "Poison",
+//   "Fire",
+//   "Flying",
+//   "Water",
+//   "Bug",
+//   "Normal",
+//   "Electric",
+//   "Ground",
+//   "Fairy",
+//   "Fighting",
+//   "Psychic",
+//   "Rock",
+//   "Steel",
+//   "Ice",
+//   "Ghost",
+//   "Dragon",
+//   "Dark",
+// ]);
 
 export const type = pgTable("types", {
   id: uuid("id").defaultRandom().primaryKey(),
-  type: typeEnum("type").notNull().unique(),
+  type: varchar("type", { length: 255 }).notNull().unique(),
 });
 
 // relationship table between pokemon and types
@@ -98,10 +102,10 @@ export const pokemonTypes = pgTable(
   {
     pokemonId: uuid("pokemon_id")
       .notNull()
-      .references(() => pokemon.uuid),
+      .references(() => pokemon.uuid, { onDelete: "cascade" }),
     typeId: uuid("type_id")
       .notNull()
-      .references(() => type.id),
+      .references(() => type.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.pokemonId, t.typeId] }),

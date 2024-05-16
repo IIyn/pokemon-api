@@ -4,8 +4,10 @@ import { BagService } from "@/domain/services/BagService";
 import { JwtPayload } from "@/types/jwt";
 import jwt from "jsonwebtoken";
 import { randomUUID } from "crypto";
+import { ItemService } from "@/domain/services/ItemService";
 
 const bagService = new BagService();
+const itemService = new ItemService();
 
 /**
  *  Get a bag by its id

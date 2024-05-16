@@ -40,15 +40,17 @@ CREATE TABLE IF NOT EXISTS "pokemon" (
 	"uuid" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"id" integer NOT NULL,
 	"species" varchar(255) NOT NULL,
-	"description" varchar(1000) NOT NULL
+	"description" varchar(1000) NOT NULL,
+	CONSTRAINT "pokemon_id_unique" UNIQUE("id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "pokemon_evolutions" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"previous" uuid,
-	"next" uuid,
-	"prev_level" integer,
-	"next_level" integer
+	"pokemon_id" uuid NOT NULL,
+	"previous" integer,
+	"next" integer,
+	"prev_level" varchar(255),
+	"next_level" varchar(255)
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "pokemon_images" (
@@ -62,8 +64,8 @@ CREATE TABLE IF NOT EXISTS "pokemon_images" (
 CREATE TABLE IF NOT EXISTS "pokemon_profile" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"pokemon_id" uuid NOT NULL,
-	"height" integer NOT NULL,
-	"weight" integer NOT NULL,
+	"height" varchar(255) NOT NULL,
+	"weight" varchar(255) NOT NULL,
 	"gender" varchar(255) NOT NULL
 );
 --> statement-breakpoint
@@ -139,13 +141,19 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "pokemon_evolutions" ADD CONSTRAINT "pokemon_evolutions_previous_pokemon_uuid_fk" FOREIGN KEY ("previous") REFERENCES "public"."pokemon"("uuid") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "pokemon_evolutions" ADD CONSTRAINT "pokemon_evolutions_pokemon_id_pokemon_uuid_fk" FOREIGN KEY ("pokemon_id") REFERENCES "public"."pokemon"("uuid") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "pokemon_evolutions" ADD CONSTRAINT "pokemon_evolutions_next_pokemon_uuid_fk" FOREIGN KEY ("next") REFERENCES "public"."pokemon"("uuid") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "pokemon_evolutions" ADD CONSTRAINT "pokemon_evolutions_previous_pokemon_id_fk" FOREIGN KEY ("previous") REFERENCES "public"."pokemon"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "pokemon_evolutions" ADD CONSTRAINT "pokemon_evolutions_next_pokemon_id_fk" FOREIGN KEY ("next") REFERENCES "public"."pokemon"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -1,6 +1,6 @@
 {
-  "id": "09c87b83-14c9-497c-9622-0de0086e291e",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "97f46987-a228-4e18-838a-ccd7115b8c93",
+  "prevId": "d8936af2-e2c4-4fbc-b2bb-0265db0ed174",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -15,8 +15,8 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "user_id": {
-          "name": "user_id",
+        "trainer_id": {
+          "name": "trainer_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
@@ -24,12 +24,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "bag_user_id_trainer_id_fk": {
-          "name": "bag_user_id_trainer_id_fk",
+        "bag_trainer_id_trainer_id_fk": {
+          "name": "bag_trainer_id_trainer_id_fk",
           "tableFrom": "bag",
           "tableTo": "trainer",
           "columnsFrom": [
-            "user_id"
+            "trainer_id"
           ],
           "columnsTo": [
             "id"
@@ -181,7 +181,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "multilingual_names_item_id_item_uuid_fk": {
@@ -298,7 +298,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "pokemon_evolutions_previous_pokemon_id_fk": {
@@ -311,7 +311,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "pokemon_evolutions_next_pokemon_id_fk": {
@@ -324,7 +324,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -379,7 +379,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -434,7 +434,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -501,7 +501,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -537,7 +537,7 @@
           "columnsTo": [
             "uuid"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "pokemon_types_type_id_types_id_fk": {
@@ -550,7 +550,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -677,8 +677,7 @@
         },
         "type": {
           "name": "type",
-          "type": "type_enum",
-          "typeSchema": "public",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         }
@@ -741,30 +740,6 @@
         "japanese",
         "chinese",
         "french"
-      ]
-    },
-    "public.type_enum": {
-      "name": "type_enum",
-      "schema": "public",
-      "values": [
-        "Grass",
-        "Poison",
-        "Fire",
-        "Flying",
-        "Water",
-        "Bug",
-        "Normal",
-        "Electric",
-        "Ground",
-        "Fairy",
-        "Fighting",
-        "Psychic",
-        "Rock",
-        "Steel",
-        "Ice",
-        "Ghost",
-        "Dragon",
-        "Dark"
       ]
     }
   },

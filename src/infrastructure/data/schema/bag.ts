@@ -4,7 +4,7 @@ import { relations } from "drizzle-orm";
 
 export const bag = pgTable("bag", {
   id: uuid("id").defaultRandom().primaryKey(),
-  trainerId: uuid("user_id")
+  trainerId: uuid("trainer_id")
     .notNull()
     .references(() => trainer.id),
 });

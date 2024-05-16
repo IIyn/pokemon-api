@@ -2,6 +2,8 @@ import { Item, NewItem, ItemColumns } from "@/domain/entities/Item";
 import { db } from "@/infrastructure/data";
 import { eq } from "drizzle-orm";
 import { item, multilingualNames } from "@/infrastructure/data/schema";
+import { MultilingualNamesRepository } from "./MultilingualNamesRepository";
+import { NewMultilingualNames } from "@/domain/entities/MultilingualNames";
 
 /**
  * Item repository
@@ -9,6 +11,12 @@ import { item, multilingualNames } from "@/infrastructure/data/schema";
  * @public
  */
 export class ItemRepository {
+  multilingualNamesRepository: MultilingualNamesRepository;
+
+  constructor() {
+    this.multilingualNamesRepository = new MultilingualNamesRepository();
+  }
+
   /**
    * Get an item by id
    */
@@ -61,11 +69,14 @@ export class ItemRepository {
   /**
    * Create an item
    */
-  createItem(
-    newItem: NewItem,
-    name: [{ value: string; language: string }]
-  ): Promise<any> {
+  createItem(newItem: NewItem, names: NewMultilingualNames[]): Promise<any> {
     try {
+      for (const name of names) {
+        this.multilingualNamesRepository.createMultilingualName({
+          ...name,
+          itemId: newItem.uuid,
+        });
+      }
       return db.insert(item).values(newItem).execute();
     } catch (err) {
       console.error(err);

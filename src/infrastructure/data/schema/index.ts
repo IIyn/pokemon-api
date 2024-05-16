@@ -9,7 +9,6 @@ import {
   pokemonTypes,
   type,
   typeRelations,
-  typeEnum,
   pokemonTypesRelations,
 } from "./pokemon";
 import { multilingualNames, languagesEnum } from "./multilingualNames";
@@ -39,7 +38,6 @@ export {
   bagitem,
   trainerPokemon,
   languagesEnum,
-  typeEnum,
   itemRelation,
   trainerRelation,
   trainerPokemonRelation,
