@@ -1,13 +1,11 @@
 //@ts-nocheck
-import { NewTrainer, Trainer } from "../../src/domain/entities/Trainer";
+import { NewTrainer } from "../../src/domain/entities/Trainer";
 import { TrainerRepository } from "../../src/infrastructure/repositories/TrainerRepository";
 import { TrainerService } from "../../src/domain/services/TrainerService";
 
 import { createdUser } from "../jest.setup";
-import { db } from "../../src/infrastructure/data";
-import { trainer } from "../../src/infrastructure/data/schema";
 
-jest.mock("../../src//infrastructure/repositories/TrainerRepository");
+jest.mock("../../src/infrastructure/repositories/TrainerRepository");
 
 describe("TrainerService", () => {
   let trainerServiceInstance: TrainerService;
