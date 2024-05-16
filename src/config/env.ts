@@ -13,6 +13,7 @@ const env: EnvConfig = {
   DATABASE_URL:
     process.env.DATABASE_URL ||
     "postgres://postgres:admin@localhost:5432/pokemon",
+  CLIENT_URL: process.env.CLIENT_URL || "http://localhost:3000",
 };
 
 export default env;

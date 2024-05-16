@@ -14,4 +14,5 @@ export interface EnvConfig {
   REFRESH_SECRET: string;
   NODE_ENV: "development" | "production" | "test";
   DATABASE_URL: string;
+  CLIENT_URL: string;
 }

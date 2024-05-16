@@ -33,8 +33,8 @@ export class TrainerService {
    * Add a trainer
    * @param trainer - The trainer to add
    */
-  addTrainer(trainer: NewTrainer): void {
-    this.trainerRepository.addTrainer(trainer);
+  addTrainer(trainer: NewTrainer) {
+    return this.trainerRepository.addTrainer(trainer);
   }
 
   /**

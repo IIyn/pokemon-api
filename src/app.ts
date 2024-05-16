@@ -6,11 +6,18 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import { swaggerDefinition } from "./swagger";
 import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const app = express();
 app.use(cookieParser());
 app.use(express.json());
 const { PORT, HOST, NODE_ENV } = env;
+
+const corsOptions = {
+  origin: env.CLIENT_URL,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 const options = {
   swaggerDefinition: swaggerDefinition,

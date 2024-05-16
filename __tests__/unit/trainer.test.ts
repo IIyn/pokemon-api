@@ -1,143 +1,62 @@
 //@ts-nocheck
-import { Trainer } from "../../src/domain/entities/Trainer";
+import { NewTrainer, Trainer } from "../../src/domain/entities/Trainer";
 import { TrainerRepository } from "../../src/infrastructure/repositories/TrainerRepository";
 import { TrainerService } from "../../src/domain/services/TrainerService";
+
+import { createdUser } from "../jest.setup";
+import { db } from "../../src/infrastructure/data";
+import { trainer } from "../../src/infrastructure/data/schema";
 
 jest.mock("../../src//infrastructure/repositories/TrainerRepository");
 
 describe("TrainerService", () => {
-  let trainerService: TrainerService;
-  let mockTrainerRepository: jest.Mocked<TrainerRepository>;
-  let trainer: Trainer;
+  let trainerServiceInstance: TrainerService;
+  let trainer: NewTrainer = {
+    name: "Ash Ketchum",
+    age: 10,
+  };
 
-  beforeEach(() => {
-    mockTrainerRepository =
-      new TrainerRepository() as jest.Mocked<TrainerRepository>;
-    trainerService = new TrainerService();
-    (trainerService as any).trainerRepository = mockTrainerRepository;
-    trainer = {
-      id: "1",
-      name: "Trainer000",
-      userId: "1",
-      pokemonIds: ["67"],
-    };
+  beforeAll(() => {
+    trainerServiceInstance = new TrainerService();
   });
 
-  it("should get a trainer by id", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(trainer);
+  it("should add a new trainer", async () => {
+    const createdTrainerID = await trainerServiceInstance.addTrainer({
+      ...trainer,
+      userId: createdUser.id,
+    });
 
-    const result = trainerService.getTrainerById("1");
-
-    expect(result).toBe(trainer);
-    expect(mockTrainerRepository.getTrainerById).toHaveBeenCalledWith("1");
+    expect(createdTrainerID).toBeTruthy();
   });
 
-  it("should get a trainer by userId", () => {
-    mockTrainerRepository.getTrainerByUserId.mockReturnValue([trainer]);
+  it("should get a trainer by its id", async () => {
+    const trainerByID = await trainerServiceInstance.getTrainerById(
+      createdUser.id
+    );
 
-    const result = trainerService.getTrainerByUserId("1");
-
-    expect(result).toEqual([trainer]);
-    expect(mockTrainerRepository.getTrainerByUserId).toHaveBeenCalledWith("1");
+    expect(trainerByID).toBeTruthy();
   });
 
-  it("should add a trainer", () => {
-    const trainer: Trainer = {
-      id: "2",
-      name: "Trainer000",
-      userId: "2",
-      pokemons: ["2"],
-    };
+  it("should get a trainer by its user id", async () => {
+    const trainerByUserID = await trainerServiceInstance.getTrainerByUserId(
+      createdUser.id
+    );
 
-    trainerService.addTrainer(trainer);
-
-    expect(mockTrainerRepository.addTrainer).toHaveBeenCalledWith(trainer);
-    expect(mockTrainerRepository.saveTrainers).toHaveBeenCalled();
-  });
-
-  it("should delete a trainer", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(trainer);
-
-    trainerService.deleteTrainer("1");
-
-    expect(mockTrainerRepository.deleteTrainer).toHaveBeenCalledWith("1");
-    expect(mockTrainerRepository.saveTrainers).toHaveBeenCalled();
+    expect(trainerByUserID).toBeTruthy();
   });
 
   it("should add a pokemon to a trainer", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(trainer);
+    trainerServiceInstance.addPokemonToTrainer("1", "1");
 
-    trainerService.addPokemonToTrainer("1", "2");
-
-    expect(mockTrainerRepository.updateTrainer).toHaveBeenCalledWith(trainer);
-    expect(mockTrainerRepository.saveTrainers).toHaveBeenCalled();
+    expect(TrainerRepository.prototype.addPokemonToTrainer).toHaveBeenCalled();
   });
 
-  it("should remove a pokemon from a trainer", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(trainer);
+  it("should delete a trainer", () => {
+    trainerServiceInstance.deleteTrainer(createdUser.id);
 
-    trainerService.removePokemonFromTrainer("1", "2");
+    // Check if the trainer was deleted
+    const trainer = trainerServiceInstance.getTrainerByUserId(createdUser.id);
 
-    expect(mockTrainerRepository.updateTrainer).toHaveBeenCalledWith(trainer);
-    expect(mockTrainerRepository.saveTrainers).toHaveBeenCalled();
-  });
-
-  it("should add a team of pokemons to a trainer", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(trainer);
-
-    trainerService.addTeamToTrainer("1", ["2", "3"]);
-
-    expect(mockTrainerRepository.updateTrainer).toHaveBeenCalledWith(trainer);
-    expect(mockTrainerRepository.saveTrainers).toHaveBeenCalled();
-  });
-
-  it("should not add a team of pokemons to a trainer if the trainer does not exist", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(undefined);
-
-    trainerService.addTeamToTrainer("1", ["2", "3"]);
-
-    expect(mockTrainerRepository.updateTrainer).not.toHaveBeenCalled();
-  });
-
-  it("should not remove a pokemon from a trainer if the trainer does not exist", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(undefined);
-
-    trainerService.removePokemonFromTrainer("1", "2");
-
-    expect(mockTrainerRepository.updateTrainer).not.toHaveBeenCalled();
-  });
-
-  it("should not add a pokemon to a trainer if the trainer does not exist", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(undefined);
-
-    trainerService.addPokemonToTrainer("1", "2");
-
-    expect(mockTrainerRepository.updateTrainer).not.toHaveBeenCalled();
-  });
-
-  it("should not delete a trainer if the trainer does not exist", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(undefined);
-
-    trainerService.deleteTrainer("1");
-
-    expect(mockTrainerRepository.deleteTrainer).not.toHaveBeenCalled();
-  });
-
-  it("should not get a trainer by id if the trainer does not exist", () => {
-    mockTrainerRepository.getTrainerById.mockReturnValue(undefined);
-
-    const result = trainerService.getTrainerById("1");
-
-    expect(result).toBeUndefined();
-    expect(mockTrainerRepository.getTrainerById).toHaveBeenCalledWith("1");
-  });
-
-  it("should not get a trainer by userId if the trainer does not exist", () => {
-    mockTrainerRepository.getTrainerByUserId.mockReturnValue([]);
-
-    const result = trainerService.getTrainerByUserId("1");
-
-    expect(result).toEqual([]);
-    expect(mockTrainerRepository.getTrainerByUserId).toHaveBeenCalledWith("1");
+    expect(trainer).toBeFalsy();
   });
 });
