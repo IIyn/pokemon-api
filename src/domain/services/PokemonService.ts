@@ -1,5 +1,6 @@
-import { Pokemon } from "@/domain/entities/Pokemon";
 import { PokemonRepository } from "@/infrastructure/repositories/PokemonRepository";
+import fs from "fs";
+import path from "path";
 
 /**
  * Pokemon service, used to interact with the pokemon repository
@@ -17,7 +18,7 @@ export class PokemonService {
    * @param id - The pokemon ID
    * @returns Pokemon | undefined - The pokemon with the given ID
    */
-  getPokemonById(id: number): Pokemon | undefined {
+  getPokemonById(id: number): Promise<any | undefined> {
     return this.pokemonRepository.getPokemonById(id);
   }
 
@@ -25,23 +26,33 @@ export class PokemonService {
    * Get all pokemons
    * @returns Pokemon[] - All pokemons
    */
-  getAllPokemons(limit: number | undefined): Pokemon[] {
-    if (limit) {
-      return this.pokemonRepository.getAllPokemons(limit);
-    } else {
-      return this.pokemonRepository.getAllPokemons();
-    }
+  getAllPokemons(
+    limit: number | undefined,
+    offset: number | undefined
+  ): Promise<any> {
+    return this.pokemonRepository.getAllPokemons(limit, offset);
   }
 
-  /**
-   *
-   * @param set - The number of random pokemons to retrieve
-   * @returns Pokemon[] - A set of random pokemons
-   */
-  getRandomPokemons(set: number): Pokemon[] {
-    return this.pokemonRepository
-      .getAllPokemons()
-      .sort(() => Math.random() - Math.random())
-      .slice(0, set);
+  private fromJSON() {
+    const filePath = path.join(
+      __dirname,
+      "..",
+      "data",
+      "json",
+      "pokemons.json"
+    );
+    const data = fs.readFileSync(filePath, "utf-8");
+    return JSON.parse(data);
+  }
+
+  private storeJSONinDB() {
+    const pokemons = this.fromJSON();
+    pokemons.forEach((pokemon: any) => {
+      this.pokemonRepository.createPokemon({
+        id: pokemon.id,
+        species: pokemon.species,
+        description: pokemon.description,
+      });
+    });
   }
 }

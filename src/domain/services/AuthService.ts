@@ -1,8 +1,7 @@
-import { User } from "@/domain/entities/User";
+import { User, NewUser, UserColumns } from "@/domain/entities/User";
 import { UserRepository } from "@/infrastructure/repositories/UserRepository";
 import env from "@/config/env";
 import jwt from "jsonwebtoken";
-import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
 
 const { REFRESH_SECRET, JWT_SECRET } = env;
@@ -25,23 +24,21 @@ export class AuthService {
    * @param username - the id of the user
    * @returns the user
    */
-  getUserByUsername(username: string): User | undefined {
-    return this.userRepository.getUserByUsername(username);
+  getUserByUsername(username: string): Promise<Partial<User> | undefined> {
+    const columns: UserColumns = {
+      id: true,
+      username: true,
+      refreshToken: true,
+    };
+    return this.userRepository.getUserByUsername(username, columns);
   }
 
   /**
    * Creates a user with a randomUUID
    * @param user - the user to create
    */
-  createUser(user: User): void {
-    // TODO: hash the password
-
-    if (this.userRepository.getUserByUsername(user.username)) {
-      throw new Error("User already exists");
-    } else {
-      user.id = randomUUID(); // generate a random UUID
-      this.userRepository.addUser(user);
-    }
+  createUser(user: NewUser): void {
+    this.userRepository.addUser(user);
   }
 
   /**
@@ -50,8 +47,10 @@ export class AuthService {
    * @param hashedPassword - the hashed password of the user
    * @returns true if the user exists and the password is correct, false otherwise
    */
-  verifyUser(username: string, hashedPassword: string): boolean {
-    const user = this.userRepository.getUserByUsername(username);
+  async verifyUser(username: string, hashedPassword: string): Promise<boolean> {
+    const user = (await this.userRepository.getUserByUsername(username, {
+      password: true,
+    })) as any;
     if (!user) {
       return false;
     } else {

@@ -12,14 +12,14 @@ const bagService = new BagService();
  * @param req
  * @param res
  */
-export const getBagById = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const bag = bagService.getBagById(id);
-    response(res, {
-        statusCode: 200,
-        message: "OK",
-        data: bag,
-    });
+export const getBagById = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const bag = await bagService.getBagById(id);
+  response(res, {
+    statusCode: 200,
+    message: "OK",
+    data: bag,
+  });
 };
 
 /**
@@ -27,14 +27,14 @@ export const getBagById = (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const getBagByTrainerId = (req: Request, res: Response) => {
-    const { id } = req.params;
-    const bag = bagService.getBagByTrainerId(id);
-    response(res, {
-        statusCode: 200,
-        message: "OK",
-        data: bag,
-    });
+export const getBagByTrainerId = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const bag = await bagService.getBagByTrainerId(id);
+  response(res, {
+    statusCode: 200,
+    message: "OK",
+    data: bag,
+  });
 };
 
 /**
@@ -42,20 +42,20 @@ export const getBagByTrainerId = (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const getSelfBags = (req: Request, res: Response) => {
-    const { accessToken } = req.cookies;
-    console.log(accessToken);
-    const decoded = jwt.decode(accessToken) as JwtPayload;
-    console.log(decoded);
-    const userId = decoded.userId;
-    console.log(userId);
-    const bags = bagService.getBagByTrainerId(userId);
-    console.log(bags);
-    response(res, {
-        statusCode: 200,
-        message: "OK",
-        data: bags,
-    });
+export const getSelfBags = async (req: Request, res: Response) => {
+  const { accessToken } = req.cookies;
+  console.log(accessToken);
+  const decoded = jwt.decode(accessToken) as JwtPayload;
+  console.log(decoded);
+  const userId = decoded.userId;
+  console.log(userId);
+  const bags = await bagService.getBagByTrainerId(userId);
+  console.log(bags);
+  response(res, {
+    statusCode: 200,
+    message: "OK",
+    data: bags,
+  });
 };
 
 /**
@@ -64,16 +64,13 @@ export const getSelfBags = (req: Request, res: Response) => {
  * @param res
  */
 export const addBag = (req: Request, res: Response) => {
-    const { name, itemIds, trainerId } = req.body;
-    const { accessToken } = req.cookies;
-    const decoded = jwt.decode(accessToken) as JwtPayload;
-    const userId = decoded.userId;
-    const id = randomUUID();
-    bagService.addBag({ id, name, itemIds, trainerId });
-    response(res, {
-        statusCode: 201,
-        message: "Created",
-    });
+  const { trainerId } = req.body;
+  const { accessToken } = req.cookies;
+  bagService.addBag(trainerId);
+  response(res, {
+    statusCode: 201,
+    message: "Created",
+  });
 };
 
 /**
@@ -82,12 +79,12 @@ export const addBag = (req: Request, res: Response) => {
  * @param res
  */
 export const addItemToBag = (req: Request, res: Response) => {
-    const { bagId, itemId } = req.body;
-    bagService.addItemToBag(bagId, itemId);
-    response(res, {
-        statusCode: 201,
-        message: "Created",
-    });
+  const { bagId, itemId } = req.body;
+  bagService.addItemToBag(bagId, itemId);
+  response(res, {
+    statusCode: 201,
+    message: "Created",
+  });
 };
 
 /**
@@ -96,12 +93,12 @@ export const addItemToBag = (req: Request, res: Response) => {
  * @param res
  */
 export const removeItemFromBag = (req: Request, res: Response) => {
-    const { bagId, itemId } = req.body;
-    bagService.removeItemFromBag(bagId, itemId);
-    response(res, {
-        statusCode: 200,
-        message: "OK",
-    });
+  const { bagId, itemId } = req.body;
+  bagService.removeItemFromBag(bagId, itemId);
+  response(res, {
+    statusCode: 200,
+    message: "OK",
+  });
 };
 
 /**
@@ -110,10 +107,10 @@ export const removeItemFromBag = (req: Request, res: Response) => {
  * @param res
  */
 export const addItemsToBag = (req: Request, res: Response) => {
-    const { bagId, itemIds } = req.body;
-    bagService.addItemsToBag(bagId, itemIds);
-    response(res, {
-        statusCode: 201,
-        message: "Created",
-    });
+  const { bagId, itemIds } = req.body;
+  bagService.addItemsToBag(bagId, itemIds);
+  response(res, {
+    statusCode: 201,
+    message: "Created",
+  });
 };

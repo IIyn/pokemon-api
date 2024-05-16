@@ -1,39 +1,24 @@
-/**
- * Interface representing a Pokemon entity based on the data from the Pokemons.json file.
- */
-export interface Pokemon {
-  id: number;
-  name: {
-    english: string;
-    japanese: string;
-    chinese: string;
-    french: string;
-  };
-  type: string[];
-  base: {
-    HP: number;
-    Attack: number;
-    Defense: number;
-    SpAttack: number;
-    SpDefense: number;
-    Speed: number;
-  };
-  species: string;
-  description: string;
-  evolution: {
-    next?: string;
-    prev?: string;
-  };
-  profile: {
-    height: string;
-    weight: string;
-    egg: string[];
-    ability: Array<string[]>;
-    gender: string;
-  };
-  image: {
-    sprite: string;
-    thumbnail: string;
-    hires: string;
-  };
-}
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import {
+  pokemon,
+  pokemonEvolutions,
+  pokemonImages,
+  pokemonProfile,
+  pokemonStats,
+  pokemonTypes,
+  type,
+} from "@/infrastructure/data/schema";
+
+export type Pokemon = InferSelectModel<typeof pokemon>;
+
+export type NewPokemon = InferInsertModel<typeof pokemon>;
+
+export type PokemonColumns = { [K in keyof Pokemon]?: boolean };
+
+export type PokemonProfile = InferSelectModel<typeof pokemonProfile>;
+
+export type PokemonStats = InferSelectModel<typeof pokemonStats>;
+
+export type PokemonImages = InferSelectModel<typeof pokemonImages>;
+
+

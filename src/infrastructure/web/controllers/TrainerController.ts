@@ -9,12 +9,12 @@ const trainerService = new TrainerService();
 
 /**
  *  Get a trainer by its id
- * @param req 
- * @param res 
+ * @param req
+ * @param res
  */
-export const getTrainerById = (req: Request, res: Response) => {
+export const getTrainerById = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const trainer = trainerService.getTrainerById(id);
+  const trainer = await trainerService.getTrainerById(id);
   response(res, {
     statusCode: 200,
     message: "OK",
@@ -27,9 +27,9 @@ export const getTrainerById = (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const getTrainerByUserId = (req: Request, res: Response) => {
+export const getTrainerByUserId = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const trainer = trainerService.getTrainerByUserId(id);
+  const trainer = await trainerService.getTrainerByUserId(id);
   response(res, {
     statusCode: 200,
     message: "OK",
@@ -42,14 +42,14 @@ export const getTrainerByUserId = (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const getSelfTrainers = (req: Request, res: Response) => {
+export const getSelfTrainers = async (req: Request, res: Response) => {
   const { accessToken } = req.cookies;
   console.log(accessToken);
   const decoded = jwt.decode(accessToken) as JwtPayload;
   console.log(decoded);
   const userId = decoded.userId;
   console.log(userId);
-  const trainers = trainerService.getTrainerByUserId(userId);
+  const trainers = await trainerService.getTrainerByUserId(userId);
   console.log(trainers);
   response(res, {
     statusCode: 200,
@@ -68,8 +68,7 @@ export const addTrainer = (req: Request, res: Response) => {
   const { accessToken } = req.cookies;
   const decoded = jwt.decode(accessToken) as JwtPayload;
   const userId = decoded.userId;
-  const id = randomUUID();
-  trainerService.addTrainer({ id, name, pokemonIds, userId });
+  trainerService.addTrainer({ name, userId });
   response(res, {
     statusCode: 201,
     message: "Created",

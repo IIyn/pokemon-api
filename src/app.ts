@@ -1,7 +1,5 @@
 import express, { Request, Response } from "express";
-import dotenv from "dotenv";
-dotenv.config();
-
+import "dotenv/config";
 import router from "@/infrastructure/web/routes";
 import env from "@/config/env";
 import swaggerUi from "swagger-ui-express";
