@@ -1,6 +1,7 @@
-import { Bag } from "@/domain/entities/Bag";
-import path from "path";
-import fs from "fs";
+import { Bag, NewBag, BagColumns } from "@/domain/entities/Bag";
+import { db } from "@/infrastructure/data";
+import { eq, and } from "drizzle-orm";
+import { bag, bagitem, trainer } from "@/infrastructure/data/schema";
 
 /**
  * Bag repository
@@ -8,72 +9,130 @@ import fs from "fs";
  * @public
  */
 export class BagRepository {
-    private bag: Bag[] = [];
-
-    private readonly filePath = path.join(
-        __dirname,
-        "..",
-        "data",
-        "bags.json"
-    );
-
-    constructor() {
-        this.bag = this.loadBags();
+  /**
+   * Get a bag by id
+   */
+  getBagById(id: string): Promise<any> {
+    try {
+      return db
+        .select({
+          id: bag.id,
+          trainerId: bag.trainerId,
+          bagitem: {
+            id: bagitem.id,
+            bagId: bagitem.bagId,
+            itemId: bagitem.itemId,
+          },
+          trainer: {
+            id: trainer.id,
+            userId: trainer.userId,
+            name: trainer.name,
+          },
+        })
+        .from(bag)
+        .leftJoin(bagitem, eq(bag.id, bagitem.bagId))
+        .leftJoin(trainer, eq(bag.trainerId, trainer.id))
+        .where(eq(bag.id, id))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer le sac");
     }
+  }
 
-    /**
-     * Load bag from the json file
-     */
-    loadBags(): Bag[] {
-        const data = fs.readFileSync(this.filePath, "utf-8");
-        return JSON.parse(data);
+  /**
+   * Get a bag by trainerId
+   */
+  getBagByTrainerId(trainerId: string): Promise<any> {
+    try {
+      return db
+        .select({
+          id: bag.id,
+          trainerId: bag.trainerId,
+          bagitem: {
+            id: bagitem.id,
+            bagId: bagitem.bagId,
+            itemId: bagitem.itemId,
+          },
+          trainer: {
+            id: trainer.id,
+            userId: trainer.userId,
+            name: trainer.name,
+          },
+        })
+        .from(bag)
+        .leftJoin(bagitem, eq(bag.id, bagitem.bagId))
+        .leftJoin(trainer, eq(bag.trainerId, trainer.id))
+        .where(eq(bag.trainerId, trainerId))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer le sac");
     }
+  }
 
-    /**
-     * Save bag to the json file
-     */
-    saveBags(): void {
-        fs.writeFileSync(this.filePath, JSON.stringify(this.bag, null, 2));
+  /**
+   * Add a bag
+   */
+  addBag(newBag: NewBag) {
+    try {
+      return db.insert(bag).values(newBag).returning({ id: bag.id }).execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible d'ajouter le sac");
     }
+  }
 
-    /**
-     * Get a bag by id
-     */
-    getBagById(id: string): Bag | undefined {
-        return this.bag.find((bag) => bag.id === id);
+  addBagItem(bagId: string, itemId: string) {
+    try {
+      return db
+        .insert(bagitem)
+        .values({ bagId, itemId })
+        .returning({ id: bagitem.id })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible d'ajouter l'item au sac");
     }
+  }
 
-    /**
-     * Get a bag by trainerId
-     */
-    getBagByTrainerId(trainerId: string): (Bag | undefined)[] {
-        return this.bag.map((bag) => {
-            if (bag.trainerId === trainerId) {
-                return bag;
-            }
-        });
+  /**
+   * Update a bag
+   */
+  updateBag(bagToUpdate: Bag) {
+    try {
+      return db
+        .update(bag)
+        .set(bagToUpdate)
+        .where(eq(bag.id, bagToUpdate.id))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de mettre à jour le sac");
     }
+  }
 
-    /**
-     * Add a bag
-     */
-    addBag(bag: Bag): void {
-        this.bag.push(bag);
+  /**
+   * Delete a bag
+   */
+  deleteBag(id: string): void {
+    try {
+      db.delete(bagitem).where(eq(bagitem.bagId, id)).execute();
+      db.delete(bag).where(eq(bag.id, id)).execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de supprimer le sac");
     }
+  }
 
-    /**
-     * Update a bag
-     */
-    updateBag(bag: Bag): void {
-        this.bag = this.bag.map((t) =>
-            t.id === bag.id ? bag : t
-        );
+  deleteBagItem(bagId: string, itemId: string): void {
+    try {
+      db.delete(bagitem)
+        .where(and(eq(bagitem.bagId, bagId), eq(bagitem.itemId, itemId)))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de supprimer l'item du sac");
     }
-
-    /**
-     * Delete a bag
-     */
-    deleteBag(id: string): void {
-        this.bag = this.bag.filter((bag) => bag.id !== id);
-    }
+  }
 }

@@ -18,9 +18,9 @@ router.get("/:id", getTrainerById);
 router.get("/user/:id", getTrainerByUserId);
 router.get("/self/all", getSelfTrainers);
 
-router.post("/", addTrainer);
-router.post("/pokemon", addPokemonToTrainer);
-router.post("/team", addTeamToTrainer);
+router.post("/add", addTrainer);
+router.put("/pokemon", addPokemonToTrainer);
+router.put("/team", addTeamToTrainer);
 
 router.delete("/pokemon", removePokemonFromTrainer);
 

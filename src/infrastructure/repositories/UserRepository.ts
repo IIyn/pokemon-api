@@ -1,6 +1,7 @@
-import { User } from "@/domain/entities/User";
-import fs from "fs";
-import path from "path";
+import { User, NewUser, UserColumns } from "@/domain/entities/User";
+import { db } from "@/infrastructure/data";
+import { eq } from "drizzle-orm";
+import { users } from "@/infrastructure/data/schema";
 
 /**
  * Handling users
@@ -8,71 +9,91 @@ import path from "path";
  * @public
  */
 export class UserRepository {
-  private users: User[] = [];
-
-  private readonly filePath = path.join(__dirname, "..", "data", "users.json"); // readonly we only need to set it once
-
-  constructor() {
-    this.users = this.loadUsers();
-  }
-
-  /**
-   * Load users from the json file
-   * @returns {User[]} - The list of users
-   */
-  loadUsers(): User[] {
-    const data = fs.readFileSync(this.filePath, "utf-8");
-    return JSON.parse(data);
-  }
-
-  /**
-   * Save users to the json file
-   */
-  saveUsers(): void {
-    fs.writeFileSync(this.filePath, JSON.stringify(this.users, null, 2));
-  }
-
   /**
    * Get a user by its id
    * @param id - The id of the user
-   * @returns User | undefined - The user with the given id
+   * @param columns - The columns to select
+   * @returns Promise<Partial<User | undefined>> - The user or undefined if not found
    */
-  getUserById(id: string): User | undefined {
-    return this.users.find((user) => user.id === id);
+  getUserById(
+    id: string,
+    columns: UserColumns
+  ): Promise<Partial<User | undefined>> {
+    try {
+      return db.query.users.findFirst({
+        where: eq(users.id, id),
+        columns,
+      });
+      // SELECT id, username FROM users WHERE id = $1
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer l'utilisateur");
+    }
   }
 
   /**
    * Get all users
    * @returns {User[]} - All users
    */
-  getAllUsers(): User[] {
-    return this.users;
+  getAllUsers(): Promise<Partial<User>[]> {
+    try {
+      return db.query.users.findMany({
+        columns: {
+          id: true,
+          username: true,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer les utilisateurs");
+    }
   }
 
   /**
    * Get a user by its username
    * @param username - The username of the user
+   * @param columns - The columns to select
+   * @returns Promise<Partial<User | undefined>> - The user or undefined if not found
    */
-  getUserByUsername(username: string): User | undefined {
-    return this.users.find((user) => user.username === username);
+  getUserByUsername(
+    username: string,
+    columns: UserColumns
+  ): Promise<Partial<User | undefined>> {
+    try {
+      return db.query.users.findFirst({
+        where: eq(users.username, username),
+        columns,
+      });
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer l'utilisateur");
+    }
   }
 
   /**
    * Add a new user
    * @param user - The user to add
    */
-  addUser(user: User): void {
-    this.users.push(user);
-    this.saveUsers();
+  addUser(user: NewUser) {
+    try {
+      return db.insert(users).values(user).execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de créer l'utilisateur");
+    }
   }
 
   /**
    * Update a user
    * @param user - The user to update
    */
-  updateUser(user: User): void {
-    this.users = this.users.map((u) => (u.id === user.id ? user : u));
-    this.saveUsers();
+  updateUser(user: User) {
+    try {
+      return db.update(users).set(user).where(eq(users.id, user.id)).execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de mettre à jour l'utilisateur");
+    }
   }
 
   /**
@@ -80,7 +101,11 @@ export class UserRepository {
    * @param id - The id of the user to delete
    */
   deleteUser(id: string): void {
-    this.users = this.users.filter((user) => user.id !== id);
-    this.saveUsers();
+    try {
+      db.delete(users).where(eq(users.id, id)).execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de supprimer l'utilisateur");
+    }
   }
 }

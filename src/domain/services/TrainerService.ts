@@ -1,4 +1,4 @@
-import { Trainer } from "@/domain/entities/Trainer";
+import { NewTrainer } from "@/domain/entities/Trainer";
 import { TrainerRepository } from "@/infrastructure/repositories/TrainerRepository";
 
 /**
@@ -17,7 +17,7 @@ export class TrainerService {
    * Get a trainer by id
    * @param id - The id of the trainer
    */
-  getTrainerById(id: string): Trainer | undefined {
+  getTrainerById(id: string): Promise<any> {
     return this.trainerRepository.getTrainerById(id);
   }
 
@@ -25,7 +25,7 @@ export class TrainerService {
    * Get a trainer by userId
    * @param userId - The id of the user
    */
-  getTrainerByUserId(userId: string): (Trainer | undefined)[] {
+  getTrainerByUserId(userId: string): Promise<any> {
     return this.trainerRepository.getTrainerByUserId(userId);
   }
 
@@ -33,9 +33,8 @@ export class TrainerService {
    * Add a trainer
    * @param trainer - The trainer to add
    */
-  addTrainer(trainer: Trainer): void {
-    this.trainerRepository.addTrainer(trainer);
-    this.trainerRepository.saveTrainers();
+  addTrainer(trainer: NewTrainer) {
+    return this.trainerRepository.addTrainer(trainer);
   }
 
   /**
@@ -43,11 +42,7 @@ export class TrainerService {
    * @param id - The id of the trainer
    */
   deleteTrainer(id: string): void {
-    const trainer = this.trainerRepository.getTrainerById(id);
-    if (trainer) {
-      this.trainerRepository.deleteTrainer(trainer.id);
-    }
-    this.trainerRepository.saveTrainers();
+    this.trainerRepository.deleteTrainer(id);
   }
 
   /**
@@ -56,12 +51,7 @@ export class TrainerService {
    * @param pokemonId - The id of the pokemon
    */
   addPokemonToTrainer(trainerId: string, pokemonId: string): void {
-    const trainer = this.getTrainerById(trainerId);
-    if (trainer) {
-      trainer.pokemonIds.push(pokemonId);
-      this.trainerRepository.updateTrainer(trainer);
-      this.trainerRepository.saveTrainers();
-    }
+    this.trainerRepository.addPokemonToTrainer(trainerId, pokemonId);
   }
 
   /**
@@ -70,12 +60,7 @@ export class TrainerService {
    * @param pokemonId - The id of the pokemon
    */
   removePokemonFromTrainer(trainerId: string, pokemonId: string): void {
-    const trainer = this.getTrainerById(trainerId);
-    if (trainer) {
-      trainer.pokemonIds = trainer.pokemonIds.filter((id) => id !== pokemonId);
-      this.trainerRepository.updateTrainer(trainer);
-    }
-    this.trainerRepository.saveTrainers();
+    this.trainerRepository.deletePokemonFromTrainer(trainerId, pokemonId);
   }
 
   /**
@@ -84,11 +69,8 @@ export class TrainerService {
    * @param pokemonIds - The ids of the pokemons
    */
   addTeamToTrainer(trainerId: string, pokemonIds: string[]): void {
-    const trainer = this.getTrainerById(trainerId);
-    if (trainer) {
-      trainer.pokemonIds.push(...pokemonIds);
-      this.trainerRepository.updateTrainer(trainer);
+    for (const pokemonId of pokemonIds) {
+      this.trainerRepository.addPokemonToTrainer(trainerId, pokemonId);
     }
-    this.trainerRepository.saveTrainers();
   }
 }

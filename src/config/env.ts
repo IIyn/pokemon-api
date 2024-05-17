@@ -1,4 +1,5 @@
 import { EnvConfig } from "@/types/env";
+import "dotenv/config";
 
 const env: EnvConfig = {
   PORT: parseInt(process.env.PORT || "8000"),
@@ -9,6 +10,10 @@ const env: EnvConfig = {
   NODE_ENV:
     (process.env.NODE_ENV as "development" | "production" | "test") ||
     "development",
+  DATABASE_URL:
+    process.env.DATABASE_URL ||
+    "postgres://postgres:admin@localhost:5432/pokemon",
+  CLIENT_URL: process.env.CLIENT_URL || "http://localhost:3000",
 };
 
 export default env;

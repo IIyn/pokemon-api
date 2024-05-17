@@ -1,6 +1,7 @@
-import { Trainer } from "@/domain/entities/Trainer";
-import path from "path";
-import fs from "fs";
+import { Trainer, NewTrainer, TrainerColumns } from "@/domain/entities/Trainer";
+import { db } from "@/infrastructure/data";
+import { eq, and } from "drizzle-orm";
+import { trainer, trainerPokemon, users } from "@/infrastructure/data/schema";
 
 /**
  * Trainer repository
@@ -8,72 +9,141 @@ import fs from "fs";
  * @public
  */
 export class TrainerRepository {
-  private trainers: Trainer[] = [];
-
-  private readonly filePath = path.join(
-    __dirname,
-    "..",
-    "data",
-    "trainers.json"
-  ); // readonly we only need to set it once
-
-  constructor() {
-    this.trainers = this.loadTrainers();
-  }
-
-  /**
-   * Load trainers from the json file
-   */
-  loadTrainers(): Trainer[] {
-    const data = fs.readFileSync(this.filePath, "utf-8");
-    return JSON.parse(data);
-  }
-
-  /**
-   * Save trainers to the json file
-   */
-  saveTrainers(): void {
-    fs.writeFileSync(this.filePath, JSON.stringify(this.trainers, null, 2));
-  }
-
   /**
    * Get a trainer by id
    */
-  getTrainerById(id: string): Trainer | undefined {
-    return this.trainers.find((trainer) => trainer.id === id);
+  getTrainerById(id: string): Promise<any> {
+    try {
+      return db
+        .select({
+          id: trainer.id,
+          userId: trainer.userId,
+          name: trainer.name,
+          trainerPokemon: {
+            id: trainerPokemon.id,
+            trainerId: trainerPokemon.trainerId,
+            pokemonId: trainerPokemon.pokemonId,
+          },
+          users: {
+            id: users.id,
+            username: users.username,
+          },
+        })
+        .from(trainer)
+        .leftJoin(trainerPokemon, eq(trainer.id, trainerPokemon.trainerId))
+        .leftJoin(users, eq(trainer.userId, users.id))
+        .where(eq(trainer.id, id))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer le dresseur");
+    }
   }
 
   /**
    * Get a trainer by userId
    */
-  getTrainerByUserId(userId: string): (Trainer | undefined)[] {
-    return this.trainers.map((trainer) => {
-      if (trainer.userId === userId) {
-        return trainer;
-      }
-    });
+  getTrainerByUserId(userId: string): Promise<any> {
+    try {
+      return db
+        .select({
+          id: trainer.id,
+          userId: trainer.userId,
+          name: trainer.name,
+          trainerPokemon: {
+            id: trainerPokemon.id,
+            trainerId: trainerPokemon.trainerId,
+            pokemonId: trainerPokemon.pokemonId,
+          },
+          users: {
+            id: users.id,
+            username: users.username,
+          },
+        })
+        .from(trainer)
+        .leftJoin(trainerPokemon, eq(trainer.id, trainerPokemon.trainerId))
+        .leftJoin(users, eq(trainer.userId, users.id))
+        .where(eq(trainer.userId, userId))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de récupérer le dresseur");
+    }
   }
 
   /**
    * Add a trainer
    */
-  addTrainer(trainer: Trainer): void {
-    this.trainers.push(trainer);
+  addTrainer(newTrainer: NewTrainer) {
+    try {
+      return db
+        .insert(trainer)
+        .values(newTrainer)
+        .returning({ id: trainer.id })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible d'ajouter le dresseur");
+    }
+  }
+
+  addPokemonToTrainer(trainerId: string, pokemonId: string) {
+    try {
+      return db
+        .insert(trainerPokemon)
+        .values({
+          trainerId,
+          pokemonId,
+        })
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible d'ajouter le pokemon au dresseur");
+    }
   }
 
   /**
    * Update a trainer
    */
-  updateTrainer(trainer: Trainer): void {
-    this.trainers = this.trainers.map((t) =>
-      t.id === trainer.id ? trainer : t
-    );
+  updateTrainer(trainerToUpdate: Trainer) {
+    try {
+      return db
+        .update(trainer)
+        .set(trainerToUpdate)
+        .where(eq(trainer.id, trainerToUpdate.id))
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de mettre à jour le dresseur");
+    }
   }
 
   /**
    * Delete a trainer
    */
-  deleteTrainer(id: string): void {
-    this.trainers = this.trainers.filter((trainer) => trainer.id !== id);
+  deleteTrainer(id: string) {
+    try {
+      return db.delete(trainer).where(eq(trainer.id, id)).execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de supprimer le dresseur");
+    }
+  }
+
+  deletePokemonFromTrainer(trainerId: string, pokemonId: string) {
+    try {
+      return db
+        .delete(trainerPokemon)
+        .where(
+          and(
+            eq(trainerPokemon.trainerId, trainerId),
+            eq(trainerPokemon.pokemonId, pokemonId)
+          )
+        )
+        .execute();
+    } catch (err) {
+      console.error(err);
+      throw new Error("Impossible de supprimer le pokemon du dresseur");
+    }
   }
 }

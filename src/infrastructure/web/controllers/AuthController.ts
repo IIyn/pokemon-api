@@ -30,14 +30,15 @@ const registerUser = async (username: string, password: string) => {
  * @param req
  * @param res
  */
-export const authenticate = (req: Request, res: Response) => {
+export const authenticate = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    if (!authService.verifyUser(username, password)) {
+    const userExists = await authService.verifyUser(username, password);
+    if (!userExists) {
       registerUser(username, password);
     }
 
-    const userCreated = authService.getUserByUsername(username);
+    const userCreated = await authService.getUserByUsername(username);
     const accessToken = authService.issueAccessToken(userCreated?.id!);
     authService.issueRefreshToken(userCreated?.id!);
     res.cookie("accessToken", accessToken, {
