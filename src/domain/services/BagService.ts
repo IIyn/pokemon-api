@@ -1,4 +1,3 @@
-import { NewBag } from "@/domain/entities/Bag";
 import { BagRepository } from "@/infrastructure/repositories/BagRepository";
 
 /**
@@ -33,8 +32,10 @@ export class BagService {
    * Add a bag
    * @param bag - The bag to add
    */
-  addBag(bag: NewBag): Promise<any> {
-    return this.bagRepository.addBag(bag);
+  addBag(trainerId: string): Promise<any> {
+    return this.bagRepository.addBag({
+      trainerId: trainerId,
+    });
   }
 
   /**

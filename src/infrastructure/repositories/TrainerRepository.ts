@@ -87,6 +87,9 @@ export class TrainerRepository {
     }
   }
 
+  /**
+   * Add a pokemon to a trainer
+   */
   addPokemonToTrainer(trainerId: string, pokemonId: string) {
     try {
       return db
@@ -130,6 +133,12 @@ export class TrainerRepository {
     }
   }
 
+  /**
+   * delete a pokemon from a trainer
+   * @param trainerId
+   * @param pokemonId
+   * @returns
+   */
   deletePokemonFromTrainer(trainerId: string, pokemonId: string) {
     try {
       return db

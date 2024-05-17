@@ -16,11 +16,11 @@ router.use(verifyToken);
 
 router.get("/:id", getBagById);
 router.get("/trainer/:id", getBagByTrainerId);
-router.get("/me", getSelfBags);
+router.get("/self/all", getSelfBags);
 
 router.post("/add", addBag);
-router.post("/item", addItemToBag);
-router.post("/items", addItemsToBag);
+router.put("/item", addItemToBag);
+router.put("/items", addItemsToBag);
 
 router.delete("/item", removeItemFromBag);
 

@@ -45,13 +45,8 @@ export const getBagByTrainerId = async (req: Request, res: Response) => {
  * @param res
  */
 export const getSelfBags = async (req: Request, res: Response) => {
-  const { accessToken } = req.cookies;
-  console.log(accessToken);
-  const decoded = jwt.decode(accessToken) as JwtPayload;
-  console.log(decoded);
-  const userId = decoded.userId;
-  console.log(userId);
-  const bags = await bagService.getBagByTrainerId(userId);
+  const { trainerId } = req.body;
+  const bags = await bagService.getBagByTrainerId(trainerId);
   console.log(bags);
   response(res, {
     statusCode: 200,
@@ -65,10 +60,9 @@ export const getSelfBags = async (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const addBag = (req: Request, res: Response) => {
+export const addBag = async (req: Request, res: Response) => {
   const { trainerId } = req.body;
-  const { accessToken } = req.cookies;
-  bagService.addBag(trainerId);
+  await bagService.addBag(trainerId);
   response(res, {
     statusCode: 201,
     message: "Created",
